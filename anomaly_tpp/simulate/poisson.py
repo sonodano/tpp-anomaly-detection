@@ -17,6 +17,8 @@ def homogeneous_poisson(t_max: float, rate: float) -> Sequence:
     """
     total_intensity = t_max * rate
     N = np.random.poisson(total_intensity)  # number of observed events
+    # イベント数が与えられた時、イベントはそれぞれ独立に観察期間内に一様に分布
+    # dirichletのパラメータに1を指定しているので多次元一様分布に一致
     inter_times = t_max * np.random.dirichlet(np.ones(N + 1))
     arrival_times = np.cumsum(inter_times)[:-1]
     return Sequence(arrival_times=arrival_times, t_max=t_max)

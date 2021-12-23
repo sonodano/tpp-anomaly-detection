@@ -29,7 +29,7 @@ def extract_poisson_arrival_times(model, batch: Batch) -> List[List[np.ndarray]]
             num_events = lengths[idx]
             comp = compensator[idx, : num_events + 1]
             if marks is None:
-                arrivals = [comp[..., 0]]
+                arrivals = [comp[..., 0]] # Ellipsis(...)というらしい https://note.nkmk.me/python-numpy-ellipsis/
             else:
                 m = marks[idx, :num_events]
                 arrivals = [

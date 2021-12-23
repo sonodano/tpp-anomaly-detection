@@ -73,8 +73,8 @@ class Batch(DotDict):
         batch_size = len(sequences)
         device = sequences[0].arrival_times.device
 
-        t_max = torch.stack([s.t_max for s in sequences])  # (B)
-        inter_times = pad_sequence([s.inter_times for s in sequences])  # (B, L)
+        t_max = torch.stack([s.t_max for s in sequences])  # (B) 多分t_maxは全部同じなので、reshapeで作ってもよさそう
+        inter_times = pad_sequence([s.inter_times for s in sequences])  # (B, L), sequencesごとにイベント数が違うので、最も長いものに併せてゼロ埋め
         arrival_times = inter_times.cumsum(dim=-1)  # (B, L)
 
         padded_seq_len = inter_times.shape[1]
@@ -84,7 +84,7 @@ class Batch(DotDict):
 
         for i, seq in enumerate(sequences):
             length = len(seq.arrival_times)
-            mask[i, :length] = 1
+            mask[i, :length] = 1 # パディングされた部分は1, 元の値があるところは0のマスクを作成
 
         # Other attributes include marks, inter-event times
         if sequences[0].marks is not None:
